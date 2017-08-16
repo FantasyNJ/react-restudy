@@ -119,61 +119,149 @@ class App extends React.Component {
 }
 */
 
+// class App extends React.Component {
+//     constructor(){
+//         super();
+//         this.update = this.update.bind(this);
+//         this.state = {
+//             v1: '',
+//             v2: '',
+//             v3: ''
+//         }
+//     }
+//     update(e){
+//         this.setState({
+//             v1: this.refs.a.value,
+//             v2: this.b.value,
+//             v3: ReactDOM.findDOMNode(this.c).value,
+//         })
+//     }
+//     render(){
+//         return (
+//             <div>
+//                 <input
+//                     ref="a"
+//                     onChange={ this.update }
+//                     type="text"/>
+//                 <span>{ this.state.v1 }</span>
+//                 <hr/>
+//                 <input
+//                     ref={ node => this.b = node }
+//                     onChange={ this.update }
+//                     type="text"/>
+//                 <span>{ this.state.v2 }</span>
+//                 <hr/>
+//                 <Inp
+//                     ref={ component => this.c = component }
+//                     update={ this.update }
+//                 />
+//                 <span>{ this.state.v3 }</span>
+//             </div>
+//         )
+//     }
+// }
+//
+// class Inp extends React.Component {
+//     render(){
+//         return (
+//             <input
+//                 onChange={ this.props.update }
+//                 type="text"
+//             />
+//         )
+//     }
+// }
+
+/*
+class App extends React.Component {
+    constructor(){
+        super();
+        this.state = {
+            val: 0
+        }
+        this.update = this.update.bind(this);
+    }
+    update(e){
+        this.setState({
+            val: ++this.state.val
+        })
+    }
+    componentWillMount(){
+        console.log('componentWillMount');
+    }
+    componentWillUpdate(){
+        console.log('componentWillUpdate');
+    }
+    componentDidUpdate(){
+        console.log('componentDidUpdate');
+    }
+    render(){
+        console.log('render')
+        return (
+            <button onClick={this.update}>{ this.state.val }</button>
+        )
+    }
+    componentDidMount(){
+        console.log('componentDidMount');
+    }
+    componentWillUnmount(){
+        console.log('componentWillUnmount');
+    }
+}
+
+class Wrap extends React.Component {
+    mount(){
+        ReactDOM.render( <App />,  document.getElementById('a'));
+    }
+    unmount(){
+        ReactDOM.unmountComponentAtNode( document.getElementById('a') );
+    }
+    render(){
+        return (
+            <div>
+                <button onClick={this.mount.bind(this)}>mount</button>
+                <button onClick={this.unmount.bind(this)}>unmount</button>
+                <div id="a"></div>
+            </div>
+        )
+    }
+}
+*/
+
 class App extends React.Component {
     constructor(){
         super();
         this.update = this.update.bind(this);
         this.state = {
-            v1: '',
-            v2: '',
-            v3: ''
+            increasing: false
         }
     }
-    update(e){
+    update(){
+        ReactDOM.render(<App val={this.props.val + 1} />, document.getElementById('root'));
+    }
+    componentWillReceiveProps(nextProps){
         this.setState({
-            v1: this.refs.a.value,
-            v2: this.b.value,
-            v3: ReactDOM.findDOMNode(this.c).value,
+            increasing: nextProps.val > this.props.val
         })
+    }
+    shouldComponentUpdate(nextProps, nextState){
+        console.log(nextProps, nextState);
+        return nextProps.val % 5 === 0;
     }
     render(){
         return (
             <div>
-                <input
-                    ref="a"
-                    onChange={ this.update }
-                    type="text"/>
-                <span>{ this.state.v1 }</span>
-                <hr/>
-                <input
-                    ref={ node => this.b = node }
-                    onChange={ this.update }
-                    type="text"/>
-                <span>{ this.state.v2 }</span>
-                <hr/>
-                <Inp
-                    ref={ component => this.c = component }
-                    update={ this.update }
-                />
-                <span>{ this.state.v3 }</span>
+                <button onClick={this.update} >{this.props.val}</button>
             </div>
         )
     }
+    componentDidUpdate(prevProps, prevState){
+        console.log(prevProps.val)
+    }
 }
 
-// const Inp = (props) => <input
-//     onChange={ props.update }
-//     type="text"/>
-
-class Inp extends React.Component {
-    render(){
-        return (
-            <input
-                onChange={ this.props.update }
-                type="text"
-            />
-        )
-    }
+App.defaultProps = {
+    val: 0
 }
 
 // App.defaultProps = {
